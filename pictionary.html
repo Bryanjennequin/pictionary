@@ -16,6 +16,17 @@
             padding: 10px;
             border: 1px solid black;
         }
+        label{
+            display: block;
+        }
+        .users{
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: white;
+            padding: 10px;
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
@@ -28,6 +39,9 @@
             <input type="color" value="#000000" class="js-color">
         </label>
     </form>
+    <ul class="js-users users">
+
+    </ul>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script>
@@ -56,6 +70,16 @@
             strokeWeight(data.weight)
             stroke(data.color)
             line(data.mouseX, data.mouseY, data.pmouseX, data.pmouseY)
+        })
+        const usersList = document.querySelector(".js-users")
+        
+        socket.on("users", (data)=>{
+            usersList.innerHTML = ""
+            data.forEach((username)=>{
+                const li = document.createElement("li")
+                li.innerHTML = username
+                usersList.appendChild(li)
+            })
         })
     </script>
 </body>
