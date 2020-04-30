@@ -8,29 +8,53 @@
         canvas{
             box-shadow : 0 0 10px rgba(0, 0, 0, .3)
         }
+        form{
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: white;
+            padding: 10px;
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
     <h1>djskldqs</h1>
+    <form action="">
+        <label for=""> Stroke Weight
+            <input type="range" min="0" max = "50" value="4" class="js-weight">
+        </label>
+        <label for=""> Stroke Weight
+            <input type="color" value="#000000" class="js-color">
+        </label>
+    </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script>
         const socket = io()
         const username = prompt("ton nom");
         socket.emit("username", username)
+        const weightInput = document.querySelector(".js-weight")
+        const colorInput = document.querySelector(".js-color")
         function setup(){
             createCanvas(500, 500)
         }
         function mouseDragged() {
+            strokeWeight(weightInput.value)
+            stroke(colorInput.value)
             line(mouseX, mouseY, pmouseX, pmouseY)
             socket.emit("line", {
                 mouseX,
                 mouseY,
                 pmouseX,
-                pmouseY
+                pmouseY,
+                "weight" : weightInput.value,
+                "color" : colorInput.value
             })
         }
         socket.on("line", data => {
+            strokeWeight(data.weight)
+            stroke(data.color)
             line(data.mouseX, data.mouseY, data.pmouseX, data.pmouseY)
         })
     </script>
