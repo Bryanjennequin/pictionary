@@ -19,12 +19,23 @@ io.on("connection", (socket)=>{
     onConnection(socket)
 })
 let users = []
+let currentPlayer = null
+let timeOut = null
+const word = ["apple", "machin", "truc"]
 function onConnection(socket){
     socket.on("username", (username)=>{
         console.log(("Player name:", username));
         socket.username = username
-        users.push(socket)
-        sendUsers()
+        if (users.length === 0) {
+            currentPlayer = socket
+            users.push(socket)
+            switchPlayer()
+        }else{
+            users.push(socket)
+            sendUsers()
+        }
+        
+       
     })
     socket.on("disconnect", ()=>{
         console.log("user left");
@@ -32,13 +43,28 @@ function onConnection(socket){
             return user != socket
         })
         sendUsers()
+        if (users.length === 0) {
+            timeOut = clearTimeout(timeOut)
+        }
     })
     socket.on("line", (data)=>{
         socket.broadcast.emit("line", data)
     })
-    function sendUsers(){
-        io.emit("users", users.map((user=>{
-            return user.username
-        })))
-    }
+}
+function sendUsers(){
+    io.emit("users", users.map((user)=>{
+        return {
+            "username" : user.username,
+            "isActive" : currentPlayer === user
+        }
+    }))
+}
+function switchPlayer(){
+    const indexCurrentPlayer = users.indexOf(currentPlayer)
+    currentPlayer = users[(indexCurrentPlayer + 1)%users.length]
+    sendUsers()
+    const newWord = word[Math.floor(Math.random()*word.length)]
+    currentPlayer.emit("word", newWord)
+    io.emit("clear")
+    timeOut =  setTimeout(switchPlayer, 20000)
 }
