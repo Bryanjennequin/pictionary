@@ -11,4 +11,4 @@ const server = express()
     })
     .listen(port, ()=>{
         console.log("server started on port", port);
-    })
+    });
