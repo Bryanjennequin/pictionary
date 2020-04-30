@@ -56,8 +56,8 @@
         }
         function mouseDragged() {
             if (!isActive) {
-                return
-            }else{
+                return 
+            }
             strokeWeight(weightInput.value)
             stroke(colorInput.value)
             line(mouseX, mouseY, pmouseX, pmouseY)
@@ -69,7 +69,6 @@
                 "weight" : weightInput.value,
                 "color" : colorInput.value
             })
-        }
         }
         socket.on("line", data => {
             strokeWeight(data.weight)
@@ -88,7 +87,7 @@
                 }
                 usersList.appendChild(li)
                 if (username === user.username) {
-                    let isActive = user.isActive
+                     isActive = user.isActive
                 }
             })
         })

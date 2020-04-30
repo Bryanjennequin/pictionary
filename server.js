@@ -66,5 +66,5 @@ function switchPlayer(){
     const newWord = word[Math.floor(Math.random()*word.length)]
     currentPlayer.emit("word", newWord)
     io.emit("clear")
-    timeOut =  setTimeout(switchPlayer, 20000)
+    timeOut =  setTimeout(switchPlayer, 60000)
 }
